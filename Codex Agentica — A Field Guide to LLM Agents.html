@@ -1,0 +1,1677 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex Agentica — A Field Guide to LLM Agents</title>
+<style>
+  /* ============================================================
+     CODEX AGENTICA
+     A naturalist's field guide to LLM agent species.
+     Cream parchment, sepia ink, crimson accents.
+     ============================================================ */
+
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IM+Fell+English:ital@0;1&family=Special+Elite&display=swap');
+
+  :root {
+    --paper:        #f1e8d3;
+    --paper-dark:   #e8dcbe;
+    --paper-edge:   #d9c89e;
+    --ink:          #3a2a1a;
+    --ink-soft:     #5a4a36;
+    --ink-faded:    #8a755a;
+    --crimson:      #8b2c1e;
+    --crimson-soft: #a8493a;
+    --moss:         #5a6b3a;
+    --ochre:        #b8841f;
+    --azure:        #2c5269;
+    --shadow:       rgba(58, 42, 26, 0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-family: 'Cormorant Garamond', 'Georgia', serif;
+    color: var(--ink);
+    background: var(--paper);
+    background-image:
+      /* aging blotches */
+      radial-gradient(ellipse at 12% 18%, rgba(139, 44, 30, 0.04) 0%, transparent 25%),
+      radial-gradient(ellipse at 88% 72%, rgba(184, 132, 31, 0.05) 0%, transparent 30%),
+      radial-gradient(ellipse at 45% 90%, rgba(58, 42, 26, 0.04) 0%, transparent 20%),
+      /* paper grain */
+      repeating-linear-gradient(
+        93deg,
+        transparent 0px,
+        transparent 2px,
+        rgba(58, 42, 26, 0.012) 2px,
+        rgba(58, 42, 26, 0.012) 3px
+      ),
+      repeating-linear-gradient(
+        3deg,
+        transparent 0px,
+        transparent 3px,
+        rgba(139, 44, 30, 0.008) 3px,
+        rgba(139, 44, 30, 0.008) 4px
+      );
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  /* vignette edges */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at center, transparent 55%, rgba(58, 42, 26, 0.18) 100%);
+    z-index: 100;
+  }
+
+  /* ===================== LAYOUT ===================== */
+
+  .codex {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 50px 80px;
+    position: relative;
+  }
+
+  /* ===================== HEADER ===================== */
+
+  .masthead {
+    text-align: center;
+    border-bottom: 2px double var(--ink-soft);
+    padding-bottom: 28px;
+    margin-bottom: 36px;
+    position: relative;
+  }
+
+  .masthead::before, .masthead::after {
+    content: "❦";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--crimson);
+    font-size: 22px;
+    opacity: 0.7;
+  }
+  .masthead::before { left: 8%; }
+  .masthead::after  { right: 8%; }
+
+  h1.title {
+    font-family: 'IM Fell English', serif;
+    font-size: 64px;
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 6px;
+    text-shadow: 0 1px 0 var(--paper-dark);
+  }
+
+  .subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--ink-soft);
+    letter-spacing: 0.05em;
+  }
+
+  .meta-line {
+    margin-top: 14px;
+    font-family: 'Special Elite', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--ink-faded);
+  }
+
+  .meta-line .dot { color: var(--crimson); margin: 0 8px; }
+
+  /* ===================== MAIN GRID ===================== */
+
+  .main-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr 320px;
+    gap: 36px;
+    align-items: start;
+  }
+
+  /* ===================== TAXONOMY SIDEBAR ===================== */
+
+  .taxonomy {
+    position: sticky;
+    top: 30px;
+    padding: 22px 20px;
+    background: rgba(232, 220, 190, 0.4);
+    border: 1px solid var(--ink-faded);
+    border-radius: 2px;
+    box-shadow: 2px 3px 0 var(--paper-edge);
+  }
+
+  .taxonomy::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border: 1px solid var(--ink-faded);
+    opacity: 0.4;
+    pointer-events: none;
+    border-radius: 2px;
+  }
+
+  .section-head {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--crimson);
+    border-bottom: 1px solid var(--ink-faded);
+    padding-bottom: 6px;
+    margin-bottom: 14px;
+    letter-spacing: 0.02em;
+  }
+
+  .clade {
+    margin-bottom: 18px;
+  }
+
+  .clade-name {
+    font-family: 'Special Elite', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.3em;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    padding-bottom: 3px;
+    border-bottom: 1px dotted var(--ink-faded);
+  }
+
+  .species-list { list-style: none; }
+
+  .species {
+    font-size: 17px;
+    padding: 5px 8px 5px 16px;
+    cursor: pointer;
+    color: var(--ink-soft);
+    position: relative;
+    transition: all 0.18s ease;
+    border-radius: 2px;
+  }
+
+  .species::before {
+    content: "❧";
+    position: absolute;
+    left: 0;
+    color: var(--ink-faded);
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.18s ease;
+  }
+
+  .species:hover {
+    color: var(--crimson);
+    background: rgba(139, 44, 30, 0.05);
+    padding-left: 18px;
+  }
+  .species:hover::before { opacity: 1; }
+
+  .species.active {
+    color: var(--crimson);
+    font-style: italic;
+    font-weight: 600;
+    background: rgba(139, 44, 30, 0.08);
+  }
+  .species.active::before { opacity: 1; color: var(--crimson); }
+
+  .species .latin {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--ink-faded);
+    margin-top: -2px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ===================== SPECIMEN CARD (CENTER) ===================== */
+
+  .specimen {
+    background: var(--paper);
+    border: 1px solid var(--ink-faded);
+    border-radius: 2px;
+    padding: 30px 34px;
+    box-shadow:
+      0 1px 0 rgba(58, 42, 26, 0.2),
+      3px 5px 18px rgba(58, 42, 26, 0.12);
+    position: relative;
+    min-height: 720px;
+  }
+
+  /* corner ornaments */
+  .corner {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border: 1px solid var(--ink-faded);
+  }
+  .corner.tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+  .corner.tr { top: 8px; right: 8px; border-left: none; border-bottom: none; }
+  .corner.bl { bottom: 8px; left: 8px; border-right: none; border-top: none; }
+  .corner.br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+
+  .plate-no {
+    font-family: 'Special Elite', monospace;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+
+  .specimen-name {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 44px;
+    color: var(--ink);
+    text-align: center;
+    line-height: 1.1;
+    margin-bottom: 2px;
+  }
+
+  .specimen-latin {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--crimson);
+    text-align: center;
+    margin-bottom: 4px;
+    letter-spacing: 0.04em;
+  }
+
+  .specimen-tag {
+    text-align: center;
+    font-family: 'Special Elite', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--ink-faded);
+    margin-bottom: 18px;
+    text-transform: uppercase;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--ink-faded);
+    margin: 18px auto;
+    width: 60%;
+    position: relative;
+  }
+  .divider::after {
+    content: "✦";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--paper);
+    padding: 0 12px;
+    color: var(--crimson);
+    font-size: 13px;
+  }
+
+  /* anatomy stage */
+  .anatomy {
+    background: rgba(232, 220, 190, 0.35);
+    border: 1px dashed var(--ink-faded);
+    padding: 18px;
+    margin-bottom: 22px;
+    min-height: 400px;
+    position: relative;
+    border-radius: 2px;
+  }
+
+  .anatomy-label {
+    position: absolute;
+    top: 8px;
+    left: 12px;
+    font-family: 'Special Elite', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+  }
+
+  .anatomy svg {
+    width: 100%;
+    height: 400px;
+    display: block;
+  }
+
+  /* description text */
+  .description {
+    font-size: 16.5px;
+    line-height: 1.65;
+    color: var(--ink);
+    margin-bottom: 16px;
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  /* observation strip */
+  .observation {
+    background: rgba(184, 132, 31, 0.08);
+    border-left: 3px solid var(--ochre);
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+
+  /* ===================== RIGHT PANEL ===================== */
+
+  .properties {
+    position: sticky;
+    top: 30px;
+    padding: 22px 22px;
+    background: rgba(232, 220, 190, 0.4);
+    border: 1px solid var(--ink-faded);
+    border-radius: 2px;
+    box-shadow: 2px 3px 0 var(--paper-edge);
+  }
+
+  .prop-block { margin-bottom: 18px; }
+
+  .prop-head {
+    font-family: 'Special Elite', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--crimson);
+    text-transform: uppercase;
+    border-bottom: 1px dotted var(--ink-faded);
+    padding-bottom: 4px;
+    margin-bottom: 8px;
+  }
+
+  .prop-list { list-style: none; font-size: 15px; }
+  .prop-list li {
+    padding: 3px 0 3px 14px;
+    position: relative;
+    color: var(--ink-soft);
+    line-height: 1.35;
+  }
+  .prop-list li::before {
+    content: "•";
+    position: absolute;
+    left: 2px;
+    color: var(--crimson);
+  }
+
+  .prop-pair {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .prop-pair strong {
+    font-family: 'Special Elite', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    color: var(--ink);
+    display: block;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  /* when-to-use card */
+  .when-card {
+    background: rgba(139, 44, 30, 0.06);
+    border: 1px solid var(--crimson-soft);
+    padding: 12px 14px;
+    margin-top: 6px;
+    border-radius: 2px;
+  }
+  .when-card .head {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--crimson);
+    margin-bottom: 6px;
+  }
+  .when-card p {
+    font-size: 14.5px;
+    line-height: 1.45;
+    color: var(--ink);
+  }
+
+  /* ===================== DECISION HELPER ===================== */
+
+  .helper {
+    grid-column: 1 / -1;
+    margin-top: 50px;
+    padding: 32px 40px;
+    background: var(--paper);
+    border: 2px solid var(--ink-soft);
+    border-radius: 2px;
+    box-shadow: 4px 6px 0 var(--paper-edge);
+    position: relative;
+  }
+
+  .helper-head {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .helper-head h2 {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 36px;
+    color: var(--ink);
+  }
+  .helper-head .sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 16px;
+  }
+
+  .helper-tree {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-top: 18px;
+  }
+
+  .branch {
+    background: rgba(232, 220, 190, 0.5);
+    border: 1px solid var(--ink-faded);
+    padding: 16px 16px 18px;
+    position: relative;
+    border-radius: 2px;
+    transition: all 0.2s ease;
+  }
+  .branch:hover {
+    background: rgba(139, 44, 30, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 2px 3px 8px var(--shadow);
+  }
+
+  .branch-q {
+    font-family: 'Special Elite', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--crimson);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .branch-a {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--ink);
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .branch-rec {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+  .branch-rec b {
+    color: var(--crimson);
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--ink-faded);
+    text-underline-offset: 3px;
+  }
+  .branch-rec b:hover { color: var(--ink); }
+
+  /* ===================== STRATEGY GLOSSARY ===================== */
+
+  .glossary {
+    grid-column: 1 / -1;
+    margin-top: 50px;
+  }
+
+  .glossary h2 {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 32px;
+    color: var(--ink);
+    text-align: center;
+    border-bottom: 2px double var(--ink-soft);
+    padding-bottom: 12px;
+    margin-bottom: 22px;
+  }
+
+  .gloss-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .gloss-card {
+    background: rgba(232, 220, 190, 0.4);
+    border: 1px solid var(--ink-faded);
+    padding: 16px 18px;
+    border-radius: 2px;
+    position: relative;
+  }
+  .gloss-card::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--ink-faded);
+    transform: rotate(45deg);
+    opacity: 0.4;
+  }
+  .gloss-card h3 {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--crimson);
+    margin-bottom: 6px;
+  }
+  .gloss-card p {
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .gloss-card .latin {
+    font-family: 'Special Elite', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* ===================== FOOTER ===================== */
+
+  .colophon {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: 50px;
+    padding-top: 24px;
+    border-top: 2px double var(--ink-soft);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--ink-faded);
+    font-size: 14px;
+    letter-spacing: 0.05em;
+  }
+  .colophon .orn { color: var(--crimson); margin: 0 10px; }
+
+  .socials {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    margin: 14px 0 18px;
+    flex-wrap: wrap;
+  }
+  .socials a {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-family: 'Special Elite', monospace;
+    font-style: normal;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 4px 6px;
+    border-bottom: 1px dotted transparent;
+    transition: all 0.2s ease;
+  }
+  .socials a:hover {
+    color: var(--crimson);
+    border-bottom-color: var(--crimson);
+  }
+  .socials a svg {
+    transition: transform 0.2s ease;
+  }
+  .socials a:hover svg {
+    transform: translateY(-1px);
+  }
+
+  .copyright {
+    font-family: 'Special Elite', monospace;
+    font-style: normal;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+    margin-top: 10px;
+  }
+
+  /* ===================== SVG STYLING ===================== */
+  /* shared anatomy diagram styles */
+
+  .svg-stroke { stroke: var(--ink); stroke-width: 1.4; fill: none; }
+  .svg-stroke-soft { stroke: var(--ink-soft); stroke-width: 1.1; fill: none; }
+  .svg-fill { fill: var(--ink); }
+  .svg-paper { fill: var(--paper); }
+  .svg-paper-dark { fill: var(--paper-dark); }
+  .svg-label {
+    font-family: 'IM Fell English', serif;
+    font-size: 16px;
+    font-style: italic;
+    fill: var(--ink);
+  }
+  .svg-tag {
+    font-family: 'Special Elite', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    fill: var(--ink-faded);
+    text-transform: uppercase;
+  }
+  .svg-crimson { fill: var(--crimson); }
+  .svg-moss   { fill: var(--moss); }
+  .svg-ochre  { fill: var(--ochre); }
+  .svg-azure  { fill: var(--azure); }
+
+  /* hand-drawn wobble on circles */
+  .organ {
+    filter: url(#sketch);
+  }
+
+  /* flowing arrows animation */
+  .flow {
+    stroke-dasharray: 4 3;
+    animation: flow 2.5s linear infinite;
+  }
+  @keyframes flow {
+    to { stroke-dashoffset: -28; }
+  }
+
+  .pulse-node { animation: pulse 2.4s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.06); }
+  }
+
+  /* fade in */
+  .specimen, .properties { animation: fadeIn 0.45s ease-out; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===================== RESPONSIVE ===================== */
+  @media (max-width: 1100px) {
+    .main-grid {
+      grid-template-columns: 1fr;
+    }
+    .taxonomy, .properties { position: static; }
+    .helper-tree, .gloss-grid { grid-template-columns: 1fr 1fr; }
+    h1.title { font-size: 48px; }
+  }
+  @media (max-width: 640px) {
+    .codex { padding: 24px 18px 60px; }
+    h1.title { font-size: 36px; }
+    .specimen-name { font-size: 32px; }
+    .helper-tree, .gloss-grid { grid-template-columns: 1fr; }
+    .masthead::before, .masthead::after { display: none; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- shared SVG filter for hand-drawn wobble -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="sketch">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3" />
+      <feDisplacementMap in="SourceGraphic" scale="0.6" />
+    </filter>
+    <filter id="paper-shadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="0.6" />
+      <feOffset dx="0.5" dy="0.8" result="off" />
+      <feMerge><feMergeNode in="off"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+</svg>
+
+<div class="codex">
+
+  <header class="masthead">
+    <h1 class="title">Codex Agentica</h1>
+    <p class="subtitle">A Naturalist's Field Guide to the Species &amp; Strategies of Large Language Model Agents</p>
+    <div class="meta-line">
+      Compiled &amp; Illustrated by <span style="color: var(--crimson); font-family: 'IM Fell English', serif; font-style: italic; font-size: 14px; letter-spacing: 0.04em; text-transform: none;">Jocer Franquiz</span>
+    </div>
+    <div class="meta-line" style="margin-top: 6px;">
+      Illustrated <span class="dot">✦</span> Annotated <span class="dot">✦</span> For the Curious Manager
+    </div>
+  </header>
+
+  <main class="main-grid">
+
+    <!-- ============== LEFT: TAXONOMY ============== -->
+    <aside class="taxonomy">
+      <div class="section-head">Taxonomy</div>
+
+      <div class="clade">
+        <div class="clade-name">Ordo I · Solitarii</div>
+        <ul class="species-list">
+          <li class="species" data-id="react">ReAct Agent <span class="latin">Agens reactivus</span></li>
+          <li class="species" data-id="rag">RAG Agent <span class="latin">A. memoriosus</span></li>
+          <li class="species" data-id="toolUse">Tool-User <span class="latin">A. instrumentarius</span></li>
+        </ul>
+      </div>
+
+      <div class="clade">
+        <div class="clade-name">Ordo II · Dispositores</div>
+        <ul class="species-list">
+          <li class="species" data-id="router">Router <span class="latin">A. dispositor</span></li>
+          <li class="species" data-id="chain">Sequential Chain <span class="latin">A. seriatim</span></li>
+          <li class="species" data-id="parallel">Parallel Fan-out <span class="latin">A. divergens</span></li>
+        </ul>
+      </div>
+
+      <div class="clade">
+        <div class="clade-name">Ordo III · Coetus</div>
+        <ul class="species-list">
+          <li class="species" data-id="orchestrator">Orchestrator <span class="latin">A. dux operum</span></li>
+          <li class="species" data-id="hierarchical">Hierarchical <span class="latin">A. hierarchicus</span></li>
+          <li class="species" data-id="swarm">Swarm / Handoff <span class="latin">A. examen</span></li>
+        </ul>
+      </div>
+
+      <div class="clade">
+        <div class="clade-name">Ordo IV · Iudices</div>
+        <ul class="species-list">
+          <li class="species" data-id="reflection">Reflection Loop <span class="latin">A. speculator</span></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- ============== CENTER: SPECIMEN ============== -->
+    <section class="specimen" id="specimen">
+      <span class="corner tl"></span>
+      <span class="corner tr"></span>
+      <span class="corner bl"></span>
+      <span class="corner br"></span>
+      <!-- content injected by JS -->
+    </section>
+
+    <!-- ============== RIGHT: PROPERTIES ============== -->
+    <aside class="properties" id="properties">
+      <!-- content injected by JS -->
+    </aside>
+
+    <!-- ============== DECISION HELPER ============== -->
+    <section class="helper">
+      <div class="helper-head">
+        <h2>The Practitioner's Compass</h2>
+        <div class="sub">— a brief decumentum for choosing the proper species —</div>
+      </div>
+
+      <div class="helper-tree">
+        <div class="branch">
+          <div class="branch-q">Question I</div>
+          <div class="branch-a">One step, one tool?</div>
+          <div class="branch-rec">A simple call. Reach for the <b data-jump="toolUse">Tool-User</b> or, if knowledge is wanted, the <b data-jump="rag">RAG Agent</b>.</div>
+        </div>
+        <div class="branch">
+          <div class="branch-q">Question II</div>
+          <div class="branch-a">Many topics, one entry?</div>
+          <div class="branch-rec">Triage required. The <b data-jump="router">Router</b> shall dispatch each query to its proper specialist.</div>
+        </div>
+        <div class="branch">
+          <div class="branch-q">Question III</div>
+          <div class="branch-a">Complex task, unknown steps?</div>
+          <div class="branch-rec">Decomposition is needed. Summon the <b data-jump="orchestrator">Orchestrator</b> to plan, dispatch, and synthesise.</div>
+        </div>
+        <div class="branch">
+          <div class="branch-q">Question IV</div>
+          <div class="branch-a">Quality matters above all?</div>
+          <div class="branch-rec">Add a critic. The <b data-jump="reflection">Reflection Loop</b> iterates until the work is fit for the field.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== STRATEGY GLOSSARY ============== -->
+    <section class="glossary">
+      <h2>Glossarium Strategiarum</h2>
+      <div class="gloss-grid">
+
+        <div class="gloss-card">
+          <span class="latin">Strategema I</span>
+          <h3>Chain of Thought</h3>
+          <p>The agent reasons aloud, step by step, before answering. Trades latency for accuracy on multi-step problems.</p>
+        </div>
+
+        <div class="gloss-card">
+          <span class="latin">Strategema II</span>
+          <h3>ReAct</h3>
+          <p>Interleaves <i>reasoning</i> and <i>action</i>: think, call a tool, observe, think again. The foundational pattern.</p>
+        </div>
+
+        <div class="gloss-card">
+          <span class="latin">Strategema III</span>
+          <h3>Plan-and-Execute</h3>
+          <p>One pass to draft a plan, a second to execute it. Cheaper than ReAct for long tasks; brittle if the plan is wrong.</p>
+        </div>
+
+        <div class="gloss-card">
+          <span class="latin">Strategema IV</span>
+          <h3>Reflection</h3>
+          <p>A second model — or the same one in another role — critiques and revises the output until a quality bar is met.</p>
+        </div>
+
+        <div class="gloss-card">
+          <span class="latin">Strategema V</span>
+          <h3>Tool Use</h3>
+          <p>The agent calls external functions: search, code, databases, APIs. Tools extend cognition into the world.</p>
+        </div>
+
+        <div class="gloss-card">
+          <span class="latin">Strategema VI</span>
+          <h3>Memory</h3>
+          <p>Short-term (the conversation), long-term (vector stores, knowledge graphs). Without it, every meeting is the first.</p>
+        </div>
+
+        <div class="gloss-card">
+          <span class="latin">Strategema VII</span>
+          <h3>Human-in-the-Loop</h3>
+          <p>The agent pauses for approval at consequential steps. Essential when actions are costly or irreversible.</p>
+        </div>
+
+        <div class="gloss-card">
+          <span class="latin">Strategema VIII</span>
+          <h3>Guardrails</h3>
+          <p>Filters on input and output: policy, schema, safety. The fence between the experiment and the field.</p>
+        </div>
+
+        <div class="gloss-card">
+          <span class="latin">Strategema IX</span>
+          <h3>Handoff</h3>
+          <p>One agent transfers control — and context — to another. The mechanism that turns a solitary agent into a coetus.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============== COLOPHON ============== -->
+    <footer class="colophon">
+      <div style="margin-bottom: 14px;">
+        <span class="orn">❦</span>
+        Compiled for the edification of leads &amp; managers
+        <span class="orn">❦</span>
+      </div>
+
+      <div class="socials">
+        <a href="https://www.linkedin.com/in/jocerfranquiz" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>
+          <span>linkedin</span>
+        </a>
+        <a href="https://x.com/jocerfranquiz" target="_blank" rel="noopener" aria-label="X (Twitter)">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          <span>x · twitter</span>
+        </a>
+        <a href="https://github.com/jocerfranquiz" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 007.86 10.94c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.27-1.69-1.27-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.68 1.25 3.34.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.17a10.95 10.95 0 015.74 0c2.19-1.48 3.15-1.17 3.15-1.17.62 1.58.23 2.75.11 3.04.74.8 1.18 1.82 1.18 3.07 0 4.41-2.69 5.38-5.25 5.67.41.35.78 1.05.78 2.12v3.14c0 .31.21.66.8.55A11.5 11.5 0 0023.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+          <span>github</span>
+        </a>
+        <a href="https://dev.to/jocerfranquiz" target="_blank" rel="noopener" aria-label="Dev.to">
+          <svg viewBox="0 0 24 24" width="20" height="14" fill="currentColor"><path d="M7.42 10.05c-.18-.16-.46-.23-.84-.23H6l.02 2.44.04 2.45.56-.02c.41 0 .63-.07.83-.26.24-.24.26-.36.26-2.2 0-1.97-.02-2.07-.29-2.18zM0 4.94v14.12h24V4.94H0zM8.56 15.3c-.44.58-1.06.77-2.53.77H4.71V8.53h1.4c1.67 0 2.16.18 2.6.9.27.43.29.6.32 2.57.05 2.23-.02 2.73-.47 3.3zm5.09-5.47h-2.47v1.77h1.52v1.28h-1.52v1.77h2.47v1.28h-1.65c-.92 0-1.71-.04-1.78-.1-.07-.05-.13-1.69-.14-3.64l-.03-3.55h3.6zm4.68 5.45c-.17.43-.64.79-.99.79-.35 0-.81-.34-.99-.79l-1.74-6.62h1.4l1.1 4.42 1.13-4.42h1.41z"/></svg>
+          <span>dev.to</span>
+        </a>
+      </div>
+
+      <div class="copyright">
+        © MMXXVI &nbsp;·&nbsp; Jocer Franquiz &nbsp;·&nbsp; All rights reserved
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // ============================================================
+  // DATA: every agent species, with anatomy SVG + prose + props
+  // ============================================================
+
+  const SPECIES = {
+
+    react: {
+      plate: "Plate I",
+      name: "The ReAct Agent",
+      latin: "Agens reactivus",
+      tag: "Reason · Act · Observe",
+      description: "The ReAct agent is the elementary form from which most others descend. It thinks aloud, takes one action with a tool, observes the result, and thinks again. The loop continues until the task is complete or the budget exhausted. Its charm lies in its directness — and its danger, in its capacity to wander.",
+      observation: "Most failures of this species trace to a single root: it is given too many tools, or tools too vaguely described, and chooses poorly.",
+      whenTitle: "When to deploy",
+      whenText: "Single-task workflows where the right move depends on what was just seen. Customer support triage, data lookups, simple research.",
+      strengths: ["Transparent reasoning trace", "Adapts step-by-step", "Easy to debug"],
+      weaknesses: ["Drifts on long horizons", "Cost grows with each step", "Prompt-sensitive"],
+      inputs: "Natural-language task",
+      outputs: "Final answer + tool trace",
+      memory: "Short-term (turn window)",
+      tools: "1–10 well-described tools",
+      anatomy: `
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+          <!-- center LLM nucleus -->
+          <g class="organ pulse-node">
+            <circle cx="300" cy="180" r="56" class="svg-paper" stroke="#3a2a1a" stroke-width="1.6"/>
+            <circle cx="300" cy="180" r="40" class="svg-paper-dark" stroke="#5a4a36" stroke-width="1"/>
+            <circle cx="300" cy="180" r="22" fill="#8b2c1e" opacity="0.85"/>
+          </g>
+          <text x="300" y="184" text-anchor="middle" class="svg-label" fill="#f1e8d3" font-size="14">LLM</text>
+          <text x="300" y="260" text-anchor="middle" class="svg-tag">nucleus reasonans</text>
+
+          <!-- think: closed loop above the nucleus, returning to it -->
+          <path d="M 285 124 Q 260 70 320 60 Q 380 60 360 120 Q 345 135 322 128" class="svg-stroke flow" fill="none"/>
+          <polygon points="322,128 332,121 330,134" class="svg-fill"/>
+          <text x="320" y="50" text-anchor="middle" class="svg-label">think</text>
+
+          <!-- act arrow to tool -->
+          <path d="M 360 180 L 498 180" class="svg-stroke flow" style="animation-delay: -0.8s"/>
+          <polygon points="500,180 488,174 488,186" class="svg-fill"/>
+          <text x="429" y="170" text-anchor="middle" class="svg-label">act</text>
+
+          <!-- tool organelle -->
+          <g class="organ">
+            <rect x="500" y="155" width="60" height="50" rx="4" class="svg-paper-dark" stroke="#3a2a1a" stroke-width="1.4"/>
+            <line x1="510" y1="170" x2="550" y2="170" class="svg-stroke-soft"/>
+            <line x1="510" y1="180" x2="540" y2="180" class="svg-stroke-soft"/>
+            <line x1="510" y1="190" x2="545" y2="190" class="svg-stroke-soft"/>
+          </g>
+          <text x="530" y="225" text-anchor="middle" class="svg-tag">tool</text>
+
+          <!-- observe arrow back, landing on the nucleus -->
+          <path d="M 500 205 Q 430 260 348 215" class="svg-stroke flow" style="animation-delay: -1.6s"/>
+          <polygon points="348,215 358,210 354,222" class="svg-fill"/>
+          <text x="420" y="270" text-anchor="middle" class="svg-label">observe</text>
+
+          <!-- input -->
+          <g>
+            <circle cx="60" cy="180" r="22" class="svg-paper" stroke="#3a2a1a" stroke-width="1.3"/>
+            <text x="60" y="184" text-anchor="middle" class="svg-tag">query</text>
+          </g>
+          <path d="M 82 180 L 240 180" class="svg-stroke"/>
+          <polygon points="240,180 230,175 230,185" class="svg-fill"/>
+
+          <!-- output -->
+          <g>
+            <path d="M 300 240 L 300 320" class="svg-stroke flow" style="animation-delay: -2.4s"/>
+            <polygon points="300,320 294,310 306,310" class="svg-fill"/>
+            <text x="325" y="305" class="svg-label">answer</text>
+          </g>
+
+          <!-- decorative -->
+          <text x="50" y="22" class="svg-tag">Fig. 1 — Reactive loop</text>
+          <text x="50" y="388" class="svg-tag" style="font-style:italic">N.B. — single-agent, tool-augmented</text>
+        </svg>
+      `
+    },
+
+    rag: {
+      plate: "Plate II",
+      name: "The RAG Agent",
+      latin: "Agens memoriosus",
+      tag: "Retrieve · Augment · Generate",
+      description: "An agent that, before speaking, consults a memory. Each question is first transformed into a search across documents; the relevant passages are then placed before the language model as evidence. This species answers questions about your data, not the world's data, and is the workhorse of the modern enterprise.",
+      observation: "The quality of a RAG agent is dictated almost entirely by retrieval. A perfect model with poor search will still hallucinate.",
+      whenTitle: "When to deploy",
+      whenText: "Internal Q&A over private knowledge: policies, contracts, manuals, tickets, codebases.",
+      strengths: ["Grounded answers with citations", "Updatable without retraining", "Scales to vast corpora"],
+      weaknesses: ["Retrieval is brittle on jargon", "Long context costs add up", "Stale indexes mislead"],
+      inputs: "User question",
+      outputs: "Answer + source citations",
+      memory: "Vector / hybrid index",
+      tools: "Retriever, reranker",
+      anatomy: `
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+          <!-- user query -->
+          <g>
+            <circle cx="50" cy="180" r="22" class="svg-paper" stroke="#3a2a1a" stroke-width="1.3"/>
+            <text x="50" y="184" text-anchor="middle" class="svg-tag">query</text>
+          </g>
+          <path d="M 72 180 L 145 180" class="svg-stroke"/>
+          <polygon points="145,180 135,175 135,185" class="svg-fill"/>
+
+          <!-- retriever -->
+          <g class="organ">
+            <rect x="145" y="155" width="80" height="50" rx="3" class="svg-paper-dark" stroke="#3a2a1a" stroke-width="1.4"/>
+            <text x="185" y="184" text-anchor="middle" class="svg-label" font-size="11">retriever</text>
+          </g>
+          <text x="185" y="225" text-anchor="middle" class="svg-tag">embed + search</text>
+
+          <!-- knowledge store: stack of scrolls -->
+          <g class="organ" transform="translate(185, 60)">
+            <ellipse cx="0" cy="0" rx="40" ry="9" class="svg-paper-dark" stroke="#3a2a1a" stroke-width="1.2"/>
+            <path d="M -40 0 L -40 30 Q 0 39 40 30 L 40 0" class="svg-paper-dark" stroke="#3a2a1a" stroke-width="1.2" fill="#e8dcbe"/>
+            <ellipse cx="0" cy="30" rx="40" ry="9" class="svg-paper-dark" stroke="#3a2a1a" stroke-width="1.2"/>
+            <line x1="-25" y1="15" x2="25" y2="15" class="svg-stroke-soft"/>
+            <line x1="-25" y1="22" x2="20" y2="22" class="svg-stroke-soft"/>
+          </g>
+          <text x="185" y="130" text-anchor="middle" class="svg-tag">corpus / index</text>
+          <!-- query goes up to corpus -->
+          <path d="M 175 155 L 175 105" class="svg-stroke flow" style="animation-delay: -0.5s"/>
+          <polygon points="175,105 170,115 180,115" class="svg-fill"/>
+          <!-- passages come back down -->
+          <path d="M 195 105 L 195 155" class="svg-stroke flow" style="animation-delay: -1.0s"/>
+          <polygon points="195,155 190,145 200,145" class="svg-fill"/>
+
+          <!-- context bundle -->
+          <path d="M 225 180 L 295 180" class="svg-stroke flow" style="animation-delay: -1.5s"/>
+          <polygon points="295,180 285,175 285,185" class="svg-fill"/>
+          <text x="260" y="172" text-anchor="middle" class="svg-tag">context</text>
+
+          <!-- LLM nucleus -->
+          <g class="organ pulse-node">
+            <circle cx="345" cy="180" r="50" class="svg-paper" stroke="#3a2a1a" stroke-width="1.6"/>
+            <circle cx="345" cy="180" r="35" class="svg-paper-dark" stroke="#5a4a36" stroke-width="1"/>
+            <circle cx="345" cy="180" r="18" fill="#8b2c1e" opacity="0.85"/>
+          </g>
+          <text x="345" y="184" text-anchor="middle" font-size="11" fill="#f1e8d3">LLM</text>
+
+          <!-- citations branch -->
+          <path d="M 395 180 L 500 145" class="svg-stroke flow" style="animation-delay: -2.0s"/>
+          <polygon points="500,145 489,144 493,154" class="svg-fill"/>
+          <g class="organ">
+            <rect x="500" y="120" width="70" height="50" rx="3" class="svg-paper-dark" stroke="#3a2a1a" stroke-width="1.4"/>
+            <line x1="510" y1="135" x2="560" y2="135" class="svg-stroke-soft"/>
+            <line x1="510" y1="145" x2="555" y2="145" class="svg-stroke-soft"/>
+            <line x1="510" y1="155" x2="558" y2="155" class="svg-stroke-soft"/>
+          </g>
+          <text x="535" y="186" text-anchor="middle" class="svg-tag">answer</text>
+
+          <path d="M 395 180 L 500 215" class="svg-stroke flow" style="animation-delay: -2.3s"/>
+          <polygon points="500,215 489,216 493,206" class="svg-fill"/>
+          <g class="organ">
+            <rect x="500" y="200" width="70" height="40" rx="3" class="svg-paper-dark" stroke="#8b2c1e" stroke-width="1.2"/>
+            <text x="535" y="224" text-anchor="middle" class="svg-tag" fill="#8b2c1e">citations</text>
+          </g>
+
+          <text x="50" y="22" class="svg-tag">Fig. 2 — Retrieval-augmented generation</text>
+          <text x="50" y="388" class="svg-tag" style="font-style:italic">N.B. — speaks only when supported by sources</text>
+        </svg>
+      `
+    },
+
+    toolUse: {
+      plate: "Plate III",
+      name: "The Tool-User",
+      latin: "Agens instrumentarius",
+      tag: "Function · Schema · Execution",
+      description: "The simplest useful agent: one that calls functions. Each tool is described by name, purpose, and a schema of arguments; the model chooses which to invoke and with what parameters. From this primitive — a controlled jump from text into code — nearly every agentic system is built.",
+      observation: "Tool descriptions are prompts. A vague description is a vague behaviour. Write them as if instructing a new hire.",
+      whenTitle: "When to deploy",
+      whenText: "Whenever the task touches the real world: send an email, query an API, run a calculation, fetch live data.",
+      strengths: ["Deterministic where it matters", "Composable with anything callable", "Cheap to begin"],
+      weaknesses: ["Argument hallucination", "Silent failures need handling", "Permissions to manage"],
+      inputs: "Task + tool catalogue",
+      outputs: "Tool calls + final answer",
+      memory: "Often none",
+      tools: "Whatever you expose",
+      anatomy: `
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+          <!-- LLM -->
+          <g class="organ pulse-node">
+            <circle cx="200" cy="180" r="58" class="svg-paper" stroke="#3a2a1a" stroke-width="1.6"/>
+            <circle cx="200" cy="180" r="42" class="svg-paper-dark" stroke="#5a4a36" stroke-width="1"/>
+            <circle cx="200" cy="180" r="22" fill="#8b2c1e" opacity="0.85"/>
+          </g>
+          <text x="200" y="184" text-anchor="middle" font-size="13" fill="#f1e8d3">LLM</text>
+          <text x="200" y="260" text-anchor="middle" class="svg-tag">decides which tool</text>
+
+          <!-- tool receptors radiating -->
+          ${[
+            {x:430, y:80, label:"search()"},
+            {x:470, y:160, label:"sql()"},
+            {x:470, y:230, label:"email()"},
+            {x:430, y:300, label:"calculate()"},
+          ].map((t,i)=>`
+            <path d="M 258 ${180 + (t.y-180)*0.35} L ${t.x-2} ${t.y+15}" class="svg-stroke flow" style="animation-delay:-${i*0.4}s"/>
+            <polygon points="${t.x},${t.y+15} ${t.x-10},${t.y+10} ${t.x-10},${t.y+20}" class="svg-fill"/>
+            <g class="organ">
+              <rect x="${t.x}" y="${t.y}" width="100" height="30" rx="3" class="svg-paper-dark" stroke="#3a2a1a" stroke-width="1.3"/>
+              <text x="${t.x+50}" y="${t.y+20}" text-anchor="middle" font-family="Special Elite" font-size="12" fill="#3a2a1a">${t.label}</text>
+            </g>
+          `).join('')}
+
+          <!-- input -->
+          <path d="M 60 180 L 140 180" class="svg-stroke"/>
+          <polygon points="140,180 130,175 130,185" class="svg-fill"/>
+          <text x="100" y="170" text-anchor="middle" class="svg-tag">task</text>
+
+          <text x="50" y="22" class="svg-tag">Fig. 3 — Tool-using agent</text>
+          <text x="50" y="388" class="svg-tag" style="font-style:italic">N.B. — receptors == function schemas</text>
+        </svg>
+      `
+    },
+
+    router: {
+      plate: "Plate IV",
+      name: "The Router",
+      latin: "Agens dispositor",
+      tag: "Classify · Dispatch",
+      description: "A small, fast agent — sometimes not even an LLM — whose only duty is to classify an incoming request and pass it to the specialist best suited to handle it. The router itself does no work; its talent is in knowing who to call.",
+      observation: "A router that occasionally guesses wrong is fine; a router that confidently guesses wrong is poison. Calibrate it with a 'none of the above' branch.",
+      whenTitle: "When to deploy",
+      whenText: "Multi-topic chatbots, support systems with separate teams, any front door with several rooms behind it.",
+      strengths: ["Cheap and fast", "Decouples specialists", "Easy to extend with new branches"],
+      weaknesses: ["Single point of misclassification", "Hides downstream complexity", "Hard to debug end-to-end"],
+      inputs: "User query",
+      outputs: "Routed to one specialist",
+      memory: "None (typically)",
+      tools: "Classifier or small LLM",
+      anatomy: `
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+          <!-- input -->
+          <g>
+            <circle cx="60" cy="180" r="22" class="svg-paper" stroke="#3a2a1a" stroke-width="1.3"/>
+            <text x="60" y="184" text-anchor="middle" class="svg-tag">query</text>
+          </g>
+          <path d="M 82 180 L 238 180" class="svg-stroke"/>
+          <polygon points="240,180 230,175 230,185" class="svg-fill"/>
+
+          <!-- router diamond -->
+          <g class="organ pulse-node">
+            <polygon points="240,180 295,135 350,180 295,225" fill="#a8493a" stroke="#3a2a1a" stroke-width="1.5"/>
+          </g>
+          <text x="295" y="185" text-anchor="middle" font-size="13" fill="#f1e8d3" font-family="Special Elite">ROUTE?</text>
+
+          <!-- 3 branches: bend into the receiving circle from the left side so arrowheads point right -->
+          ${[
+            {y:80, label:"Billing", color:"#5a6b3a"},
+            {y:180, label:"Technical", color:"#2c5269"},
+            {y:280, label:"Sales", color:"#b8841f"},
+          ].map((b,i)=>`
+            <path d="M 350 180 Q 410 180 430 ${b.y} Q 445 ${b.y} 466 ${b.y}" class="svg-stroke flow" style="animation-delay:-${i*0.5}s" fill="none"/>
+            <polygon points="468,${b.y} 458,${b.y-5} 458,${b.y+5}" class="svg-fill"/>
+            <g class="organ">
+              <circle cx="500" cy="${b.y}" r="32" class="svg-paper" stroke="#3a2a1a" stroke-width="1.4"/>
+              <circle cx="500" cy="${b.y}" r="18" fill="${b.color}" opacity="0.85"/>
+            </g>
+            <text x="500" y="${b.y+4}" text-anchor="middle" font-size="11" fill="#f1e8d3">LLM</text>
+            <text x="500" y="${b.y+52}" text-anchor="middle" class="svg-label" font-size="14">${b.label}</text>
+          `).join('')}
+
+          <text x="50" y="22" class="svg-tag">Fig. 4 — Dispatch agent</text>
+          <text x="50" y="388" class="svg-tag" style="font-style:italic">N.B. — does no work itself, only directs</text>
+        </svg>
+      `
+    },
+
+    chain: {
+      plate: "Plate V",
+      name: "The Sequential Chain",
+      latin: "Agens seriatim",
+      tag: "Step · Step · Step",
+      description: "A fixed pipeline. The output of each step is the input of the next. There is no branching, no choice — only a known procession. What it lacks in cleverness it makes up in reliability, and many production systems are exactly this and nothing more.",
+      observation: "Most so-called 'agents' in production are sequential chains in disguise. This is not a defect; it is wisdom.",
+      whenTitle: "When to deploy",
+      whenText: "Known, repeatable workflows: summarise → translate → format; extract → validate → store.",
+      strengths: ["Predictable cost & latency", "Easy to monitor", "Each step independently testable"],
+      weaknesses: ["No adaptation mid-flow", "Errors compound forward", "Rigid by design"],
+      inputs: "Initial document or query",
+      outputs: "Final transformed result",
+      memory: "Passed forward via state",
+      tools: "Per-step, as required",
+      anatomy: `
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+          <!-- 4 stages -->
+          ${[
+            {x:80, color:"#5a6b3a", label:"Extract"},
+            {x:220, color:"#2c5269", label:"Transform"},
+            {x:360, color:"#b8841f", label:"Validate"},
+            {x:500, color:"#8b2c1e", label:"Output"},
+          ].map((s,i)=>`
+            <g class="organ ${i===1?'pulse-node':''}">
+              <circle cx="${s.x}" cy="180" r="38" class="svg-paper" stroke="#3a2a1a" stroke-width="1.5"/>
+              <circle cx="${s.x}" cy="180" r="22" fill="${s.color}" opacity="0.85"/>
+            </g>
+            <text x="${s.x}" y="184" text-anchor="middle" font-size="12" fill="#f1e8d3">LLM</text>
+            <text x="${s.x}" y="240" text-anchor="middle" class="svg-label">${s.label}</text>
+            <text x="${s.x}" y="135" text-anchor="middle" class="svg-tag">step ${i+1}</text>
+            ${i<3?`
+              <path d="M ${s.x+38} 180 L ${s.x+102} 180" class="svg-stroke flow" style="animation-delay:-${i*0.5}s"/>
+              <polygon points="${s.x+102},180 ${s.x+92},175 ${s.x+92},185" class="svg-fill"/>
+            `:''}
+          `).join('')}
+
+          <text x="50" y="22" class="svg-tag">Fig. 5 — Sequential pipeline</text>
+          <text x="50" y="388" class="svg-tag" style="font-style:italic">N.B. — each stage's output feeds the next</text>
+        </svg>
+      `
+    },
+
+    parallel: {
+      plate: "Plate VI",
+      name: "The Parallel Fan-out",
+      latin: "Agens divergens",
+      tag: "Branch · Aggregate",
+      description: "When a task admits to independent parts, the parallel agent dispatches them simultaneously and gathers the results. Time is saved at the cost of coordination; the aggregator at the end must reconcile the branches into a single coherent reply.",
+      observation: "Parallelism is most valuable when each branch is slow and independent — research, comparison, multi-source synthesis. Less so for chatty tasks.",
+      whenTitle: "When to deploy",
+      whenText: "Multi-document analysis, A/B comparison, fan-out research, ensemble voting.",
+      strengths: ["Wall-clock latency wins", "Natural ensembling", "Scales horizontally"],
+      weaknesses: ["Higher token cost", "Aggregation logic is non-trivial", "Hard to stream"],
+      inputs: "Task with independent sub-parts",
+      outputs: "Aggregated synthesis",
+      memory: "Per-branch isolated",
+      tools: "As needed per branch",
+      anatomy: `
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+          <!-- input -->
+          <g class="organ">
+            <circle cx="80" cy="180" r="32" class="svg-paper" stroke="#3a2a1a" stroke-width="1.4"/>
+            <circle cx="80" cy="180" r="18" fill="#3a2a1a"/>
+          </g>
+          <text x="80" y="184" text-anchor="middle" font-size="12" fill="#f1e8d3">FAN</text>
+          <text x="80" y="230" text-anchor="middle" class="svg-tag">dispatcher</text>
+
+          <!-- 3 parallel branches -->
+          ${[
+            {y:70,  color:"#5a6b3a", label:"Branch α"},
+            {y:180, color:"#2c5269", label:"Branch β"},
+            {y:290, color:"#b8841f", label:"Branch γ"},
+          ].map((b,i)=>`
+            <path d="M 112 180 Q 200 ${(b.y+180)/2} 273 ${b.y}" class="svg-stroke flow" style="animation-delay:-${i*0.3}s"/>
+            <polygon points="273,${b.y} 263,${b.y-5} 263,${b.y+5}" class="svg-fill"/>
+            <g class="organ">
+              <circle cx="305" cy="${b.y}" r="32" class="svg-paper" stroke="#3a2a1a" stroke-width="1.4"/>
+              <circle cx="305" cy="${b.y}" r="18" fill="${b.color}" opacity="0.85"/>
+            </g>
+            <text x="305" y="${b.y+4}" text-anchor="middle" font-size="12" fill="#f1e8d3">LLM</text>
+            <text x="305" y="${b.y-42}" text-anchor="middle" class="svg-label" font-size="12">${b.label}</text>
+            <path d="M 337 ${b.y} Q 400 ${(b.y+180)/2} 433 180" class="svg-stroke flow" style="animation-delay:-${i*0.3 + 1}s"/>
+            <polygon points="433,180 423,175 423,185" class="svg-fill"/>
+          `).join('')}
+
+          <!-- aggregator -->
+          <g class="organ pulse-node">
+            <polygon points="470,150 510,180 470,210 430,180" fill="#8b2c1e" stroke="#3a2a1a" stroke-width="1.4"/>
+          </g>
+          <text x="470" y="184" text-anchor="middle" font-size="11" fill="#f1e8d3" font-family="Special Elite">MERGE</text>
+          <text x="470" y="240" text-anchor="middle" class="svg-tag">aggregator</text>
+
+          <!-- output -->
+          <path d="M 510 180 L 565 180" class="svg-stroke"/>
+          <polygon points="565,180 555,175 555,185" class="svg-fill"/>
+
+          <text x="50" y="22" class="svg-tag">Fig. 6 — Parallel fan-out</text>
+          <text x="50" y="388" class="svg-tag" style="font-style:italic">N.B. — concurrent branches converging</text>
+        </svg>
+      `
+    },
+
+    orchestrator: {
+      plate: "Plate VII",
+      name: "The Orchestrator",
+      latin: "Agens dux operum",
+      tag: "Plan · Delegate · Synthesise",
+      description: "A foreman of agents. The orchestrator receives a complex task, decomposes it into sub-tasks suited to specialised workers, dispatches them, and synthesises their returns into a final product. It is the archetype of the multi-agent system and the natural inhabitant of long, varied workflows.",
+      observation: "An orchestrator without budgets — on steps, tokens, or time — is a creature that wanders forever. Always cap its loop.",
+      whenTitle: "When to deploy",
+      whenText: "Open-ended research, deep reports, complex code generation, anything whose plan cannot be written in advance.",
+      strengths: ["Handles novelty gracefully", "Specialised workers stay focused", "Synthesis quality is high"],
+      weaknesses: ["Expensive in tokens & time", "Failures are harder to attribute", "Needs careful budgeting"],
+      inputs: "Open-ended goal",
+      outputs: "Synthesised deliverable",
+      memory: "Shared workspace + per-worker",
+      tools: "Dispatch + worker tools",
+      anatomy: `
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+          <!-- orchestrator at top -->
+          <g class="organ pulse-node">
+            <circle cx="300" cy="80" r="42" class="svg-paper" stroke="#3a2a1a" stroke-width="1.6"/>
+            <circle cx="300" cy="80" r="28" class="svg-paper-dark" stroke="#5a4a36" stroke-width="1"/>
+            <circle cx="300" cy="80" r="15" fill="#8b2c1e"/>
+          </g>
+          <text x="300" y="84" text-anchor="middle" font-size="11" fill="#f1e8d3" font-family="Special Elite">DUX</text>
+          <text x="380" y="50" text-anchor="middle" class="svg-label">Orchestrator</text>
+
+          <!-- main trunk down from orchestrator -->
+          <line x1="300" y1="122" x2="300" y2="150" class="svg-stroke" />
+
+          <!-- horizontal bus -->
+          <line x1="130" y1="150" x2="470" y2="150" class="svg-stroke" />
+
+          <!-- 3 workers, with clean vertical arrows from bus into each -->
+          ${[
+            {x:130, color:"#5a6b3a", label:"Researcher", role:"reads"},
+            {x:300, color:"#2c5269", label:"Analyst",    role:"computes"},
+            {x:470, color:"#b8841f", label:"Writer",     role:"drafts"},
+          ].map((w,i)=>`
+            <path d="M ${w.x} 150 L ${w.x} 186" class="svg-stroke flow" style="animation-delay:-${i*0.4}s" fill="none"/>
+            <polygon points="${w.x},188 ${w.x-6},178 ${w.x+6},178" class="svg-fill"/>
+            <g class="organ">
+              <circle cx="${w.x}" cy="220" r="32" class="svg-paper" stroke="#3a2a1a" stroke-width="1.4"/>
+              <circle cx="${w.x}" cy="220" r="18" fill="${w.color}" opacity="0.85"/>
+            </g>
+            <text x="${w.x}" y="224" text-anchor="middle" font-size="11" fill="#f1e8d3">LLM</text>
+            <text x="${w.x}" y="272" text-anchor="middle" class="svg-label" font-size="14">${w.label}</text>
+            <text x="${w.x}" y="287" text-anchor="middle" class="svg-tag">${w.role}</text>
+
+            <!-- worker tools -->
+            <g class="organ">
+              <rect x="${w.x-12}" y="305" width="24" height="18" rx="2" class="svg-paper-dark" stroke="#3a2a1a" stroke-width="1"/>
+            </g>
+            <line x1="${w.x}" y1="252" x2="${w.x}" y2="305" class="svg-stroke-soft" stroke-dasharray="2,2"/>
+          `).join('')}
+
+          <text x="50" y="22" class="svg-tag">Fig. 7 — Orchestrator–worker</text>
+          <text x="50" y="388" class="svg-tag" style="font-style:italic">N.B. — dynamic decomposition &amp; synthesis</text>
+        </svg>
+      `
+    },
+
+    hierarchical: {
+      plate: "Plate VIII",
+      name: "The Hierarchical Agent",
+      latin: "Agens hierarchicus",
+      tag: "Manager · Sub-manager · Worker",
+      description: "An orchestrator of orchestrators. When tasks become so vast that a single planner cannot reason about them, layers are introduced: a senior agent breaks the goal into divisions, each headed by a mid-level agent that further divides among its own workers. The pattern resembles a corporation, with all the corporation's virtues and ills.",
+      observation: "Each layer multiplies cost and adds a place where intent can be lost in translation. Use only when the task truly demands it.",
+      whenTitle: "When to deploy",
+      whenText: "Very large research projects, multi-stage codebases, simulations of organisations, long-horizon autonomous work.",
+      strengths: ["Scales to immense tasks", "Clear separation of concerns", "Specialists at every level"],
+      weaknesses: ["Costly in tokens", "Communication loss between layers", "Hard to debug"],
+      inputs: "Grand-scale goal",
+      outputs: "Composed final artefact",
+      memory: "Layered + shared store",
+      tools: "Vast and varied",
+      anatomy: `
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+          <!-- top: CEO agent -->
+          <g class="organ pulse-node">
+            <circle cx="300" cy="55" r="32" class="svg-paper" stroke="#3a2a1a" stroke-width="1.6"/>
+            <circle cx="300" cy="55" r="16" fill="#8b2c1e"/>
+          </g>
+          <text x="300" y="59" text-anchor="middle" font-size="11" fill="#f1e8d3" font-family="Special Elite">CEO</text>
+
+          <!-- mid layer: 2 managers -->
+          ${[
+            {x:170, color:"#5a6b3a"},
+            {x:430, color:"#2c5269"},
+          ].map((m,i)=>`
+            <path d="M ${300 + (m.x-300)*0.1} 87 L ${m.x} 145" class="svg-stroke flow" style="animation-delay:-${i*0.5}s"/>
+            <g class="organ">
+              <circle cx="${m.x}" cy="170" r="28" class="svg-paper" stroke="#3a2a1a" stroke-width="1.4"/>
+              <circle cx="${m.x}" cy="170" r="14" fill="${m.color}" opacity="0.85"/>
+            </g>
+            <text x="${m.x}" y="174" text-anchor="middle" font-size="10" fill="#f1e8d3" font-family="Special Elite">MGR</text>
+          `).join('')}
+
+          <!-- workers: 2 per manager -->
+          ${[
+            {parent:170, x:110},
+            {parent:170, x:230},
+            {parent:430, x:370},
+            {parent:430, x:490},
+          ].map((w,i)=>`
+            <path d="M ${w.parent + (w.x-w.parent)*0.15} 198 L ${w.x} 255" class="svg-stroke flow" style="animation-delay:-${i*0.3}s"/>
+            <g class="organ">
+              <circle cx="${w.x}" cy="280" r="22" class="svg-paper" stroke="#3a2a1a" stroke-width="1.3"/>
+              <circle cx="${w.x}" cy="280" r="11" fill="#b8841f" opacity="0.8"/>
+            </g>
+            <text x="${w.x}" y="283" text-anchor="middle" font-size="9" fill="#f1e8d3" font-family="Special Elite">EMP</text>
+            <g class="organ">
+              <rect x="${w.x-8}" y="315" width="16" height="14" rx="2" class="svg-paper-dark" stroke="#3a2a1a" stroke-width="0.8"/>
+            </g>
+            <line x1="${w.x}" y1="302" x2="${w.x}" y2="315" class="svg-stroke-soft" stroke-dasharray="2,2"/>
+          `).join('')}
+
+          <text x="50" y="22" class="svg-tag">Fig. 8 — Hierarchical multi-agent system</text>
+          <text x="50" y="350" class="svg-tag" style="font-style:italic">N.B. — depth permits scale; cost grows</text>
+        </svg>
+      `
+    },
+
+    swarm: {
+      plate: "Plate IX",
+      name: "The Swarm",
+      latin: "Agens examen",
+      tag: "Peer · Handoff · Context-pass",
+      description: "A collective of equals. No single agent commands; instead, each is expert in some matter and may, when it recognises a question beyond its remit, hand off to a peer. The conversation flows from specialist to specialist, carrying its context. There is no foreman — only the work and the agents around it.",
+      observation: "Swarms shine when expertise is naturally compartmental but borders are blurry. They falter when no agent claims a question, or several do at once.",
+      whenTitle: "When to deploy",
+      whenText: "Customer support across product lines, complex sales conversations, any flow where the right expert changes mid-thread.",
+      strengths: ["Each agent stays narrow & sharp", "Conversation flows naturally", "Easy to add new experts"],
+      weaknesses: ["Handoff loops if mis-tuned", "Context can dilute over passes", "No central record-keeper"],
+      inputs: "Ongoing conversation",
+      outputs: "Continuous, multi-expert reply",
+      memory: "Shared thread + per-agent",
+      tools: "Handoff() + domain tools",
+      anatomy: `
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+          <!-- user enters from the left -->
+          <g>
+            <circle cx="50" cy="200" r="22" class="svg-paper" stroke="#3a2a1a" stroke-width="1.3"/>
+            <text x="50" y="204" text-anchor="middle" class="svg-tag">user</text>
+          </g>
+          <path d="M 72 200 L 243 200" class="svg-stroke"/>
+          <polygon points="245,200 235,195 235,205" class="svg-fill"/>
+
+          <!-- shared conversation thread (scroll) in the center -->
+          <g class="organ" transform="translate(300, 200)">
+            <rect x="-46" y="-30" width="92" height="60" rx="3" class="svg-paper-dark" stroke="#3a2a1a" stroke-width="1.4"/>
+            <line x1="-34" y1="-16" x2="34" y2="-16" class="svg-stroke-soft"/>
+            <line x1="-34" y1="-4"  x2="28" y2="-4"  class="svg-stroke-soft"/>
+            <line x1="-34" y1="8"   x2="32" y2="8"   class="svg-stroke-soft"/>
+            <line x1="-34" y1="20"  x2="22" y2="20"  class="svg-stroke-soft"/>
+          </g>
+          <text x="300" y="252" text-anchor="middle" class="svg-tag">shared thread</text>
+
+          <!-- three peer agents -->
+          <!-- Billing (top-left) -->
+          <g class="organ">
+            <circle cx="150" cy="90" r="32" class="svg-paper" stroke="#3a2a1a" stroke-width="1.4"/>
+            <circle cx="150" cy="90" r="18" fill="#5a6b3a" opacity="0.85"/>
+          </g>
+          <text x="150" y="95" text-anchor="middle" font-size="12" fill="#f1e8d3">LLM</text>
+          <text x="150" y="50" text-anchor="middle" class="svg-label">① Billing</text>
+
+          <!-- Tech (top-right) -->
+          <g class="organ pulse-node">
+            <circle cx="450" cy="90" r="32" class="svg-paper" stroke="#3a2a1a" stroke-width="1.4"/>
+            <circle cx="450" cy="90" r="18" fill="#2c5269" opacity="0.85"/>
+          </g>
+          <text x="450" y="95" text-anchor="middle" font-size="12" fill="#f1e8d3">LLM</text>
+          <text x="450" y="50" text-anchor="middle" class="svg-label">② Tech</text>
+
+          <!-- Sales (bottom-center) -->
+          <g class="organ">
+            <circle cx="300" cy="350" r="32" class="svg-paper" stroke="#3a2a1a" stroke-width="1.4"/>
+            <circle cx="300" cy="350" r="18" fill="#b8841f" opacity="0.85"/>
+          </g>
+          <text x="300" y="355" text-anchor="middle" font-size="12" fill="#f1e8d3">LLM</text>
+          <text x="300" y="395" text-anchor="middle" class="svg-label">③ Sales</text>
+
+          <!-- HANDOFF 1: Billing → Tech (curve over the top) -->
+          <path d="M 182 90 L 418 90" class="svg-stroke flow" style="animation-delay:0s" fill="none"/>
+          <polygon points="418,90 408,85 408,95" class="svg-fill"/>
+          <text x="300" y="80" text-anchor="middle" class="svg-tag">handoff ①→②</text>
+
+          <!-- HANDOFF 2: Tech → Sales (diagonal) -->
+          <path d="M 433 117 L 320 327" class="svg-stroke flow" style="animation-delay:-1s" fill="none"/>
+          <polygon points="320,327 332,323 322,316" class="svg-fill"/>
+          <text x="402" y="325" text-anchor="middle" class="svg-tag">handoff ②→③</text>
+
+          <line x1="170" y1="115" x2="260" y2="180" stroke="#8a755a" stroke-width="1" stroke-dasharray="3,3" opacity="0.55"/>
+          <line x1="430" y1="115" x2="340" y2="180" stroke="#8a755a" stroke-width="1" stroke-dasharray="3,3" opacity="0.55"/>
+          <line x1="300" y1="318" x2="300" y2="232" stroke="#8a755a" stroke-width="1" stroke-dasharray="3,3" opacity="0.55"/>
+
+          <text x="50" y="22" class="svg-tag">Fig. 9 — Peer swarm with handoffs</text>
+          <text x="50" y="418" class="svg-tag" style="font-style:italic">N.B. — no foreman; the thread carries context</text>
+        </svg>
+      `
+    },
+
+    reflection: {
+      plate: "Plate X",
+      name: "The Reflection Loop",
+      latin: "Agens speculator",
+      tag: "Generate · Critique · Revise",
+      description: "Two roles, often one model: a generator that produces, and a critic that finds fault. The generator drafts; the critic marks it up; the generator revises. The loop continues until the critic is satisfied or a budget exhausted. Quality rises; cost rises with it.",
+      observation: "A critic with the same blind spots as the generator improves nothing. Diversity of perspective — different prompts, different models — is what makes the loop sharpen rather than echo.",
+      whenTitle: "When to deploy",
+      whenText: "Code generation, long-form writing, anything where correctness or quality is paramount and a first draft will not suffice.",
+      strengths: ["Markedly higher quality", "Self-corrects many errors", "Trustworthy on critical paths"],
+      weaknesses: ["2–5× cost of single-pass", "Slower wall-clock", "Diminishing returns after 2–3 cycles"],
+      inputs: "Task + quality bar",
+      outputs: "Refined, vetted result",
+      memory: "Draft history + critique notes",
+      tools: "Optional; tests or validators help",
+      anatomy: `
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+          <!-- generator -->
+          <g class="organ pulse-node">
+            <circle cx="180" cy="180" r="50" class="svg-paper" stroke="#3a2a1a" stroke-width="1.6"/>
+            <circle cx="180" cy="180" r="32" class="svg-paper-dark" stroke="#5a4a36" stroke-width="1"/>
+            <circle cx="180" cy="180" r="18" fill="#5a6b3a" opacity="0.9"/>
+          </g>
+          <text x="180" y="184" text-anchor="middle" font-size="13" fill="#f1e8d3">GEN</text>
+          <text x="180" y="252" text-anchor="middle" class="svg-label">Generator</text>
+          <text x="180" y="268" text-anchor="middle" class="svg-tag">drafts</text>
+
+          <!-- draft arrow: top, from generator right edge to critic left edge -->
+          <path d="M 226 160 Q 300 110 374 160" class="svg-stroke flow" fill="none"/>
+          <polygon points="374,160 364,158 370,168" class="svg-fill"/>
+          <text x="300" y="115" text-anchor="middle" class="svg-label">draft</text>
+
+          <!-- critic -->
+          <g class="organ pulse-node" style="animation-delay: -1.2s">
+            <circle cx="420" cy="180" r="50" class="svg-paper" stroke="#3a2a1a" stroke-width="1.6"/>
+            <circle cx="420" cy="180" r="32" class="svg-paper-dark" stroke="#5a4a36" stroke-width="1"/>
+            <circle cx="420" cy="180" r="18" fill="#8b2c1e" opacity="0.9"/>
+          </g>
+          <text x="420" y="184" text-anchor="middle" font-size="13" fill="#f1e8d3">CRIT</text>
+          <text x="420" y="252" text-anchor="middle" class="svg-label">Critic</text>
+          <text x="420" y="268" text-anchor="middle" class="svg-tag">finds fault</text>
+
+          <!-- critique back: bottom curve, from critic left edge to generator right edge -->
+          <path d="M 374 200 Q 300 250 226 200" class="svg-stroke flow" style="animation-delay:-1.5s" fill="none"/>
+          <polygon points="226,200 232,210 236,200" class="svg-fill"/>
+          <text x="300" y="248" text-anchor="middle" class="svg-label">critique</text>
+
+          <!-- output when accepted -->
+          <path d="M 470 180 L 548 180" class="svg-stroke" stroke-width="1.8"/>
+          <polygon points="550,180 538,174 538,186" class="svg-fill"/>
+          <text x="510" y="170" text-anchor="middle" class="svg-tag">accept</text>
+
+          <!-- input -->
+          <path d="M 50 180 L 128 180" class="svg-stroke"/>
+          <polygon points="130,180 120,175 120,185" class="svg-fill"/>
+          <text x="90" y="170" text-anchor="middle" class="svg-tag">task</text>
+
+          <text x="50" y="22" class="svg-tag">Fig. 10 — Generator &amp; critic</text>
+          <text x="50" y="388" class="svg-tag" style="font-style:italic">N.B. — loop until satisfied or budget spent</text>
+        </svg>
+      `
+    },
+
+  };
+
+  // ============================================================
+  // RENDERERS
+  // ============================================================
+
+  function renderSpecimen(id) {
+    const s = SPECIES[id];
+    if (!s) return;
+
+    document.getElementById('specimen').innerHTML = `
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+      <div class="plate-no">${s.plate}</div>
+      <h2 class="specimen-name">${s.name}</h2>
+      <p class="specimen-latin">${s.latin}</p>
+      <div class="specimen-tag">${s.tag}</div>
+      <hr class="divider">
+
+      <div class="anatomy">
+        <div class="anatomy-label">Anatomy</div>
+        ${s.anatomy}
+      </div>
+
+      <p class="description">${s.description}</p>
+
+      <div class="observation">${s.observation}</div>
+    `;
+
+    document.getElementById('properties').innerHTML = `
+      <div class="prop-block">
+        <div class="prop-head">When to Deploy</div>
+        <div class="when-card">
+          <div class="head">${s.whenTitle}</div>
+          <p>${s.whenText}</p>
+        </div>
+      </div>
+
+      <div class="prop-block">
+        <div class="prop-head">Strengths</div>
+        <ul class="prop-list">
+          ${s.strengths.map(x=>`<li>${x}</li>`).join('')}
+        </ul>
+      </div>
+
+      <div class="prop-block">
+        <div class="prop-head">Weaknesses</div>
+        <ul class="prop-list">
+          ${s.weaknesses.map(x=>`<li>${x}</li>`).join('')}
+        </ul>
+      </div>
+
+      <div class="prop-block">
+        <div class="prop-head">Specimen Notes</div>
+        <div class="prop-pair">
+          <strong>Inputs</strong>${s.inputs}
+          <strong>Outputs</strong>${s.outputs}
+          <strong>Memory</strong>${s.memory}
+          <strong>Tools</strong>${s.tools}
+        </div>
+      </div>
+    `;
+
+    // update active state in taxonomy
+    document.querySelectorAll('.species').forEach(el => {
+      el.classList.toggle('active', el.dataset.id === id);
+    });
+  }
+
+  // ============================================================
+  // EVENTS
+  // ============================================================
+
+  document.querySelectorAll('.species').forEach(el => {
+    el.addEventListener('click', () => {
+      renderSpecimen(el.dataset.id);
+      // scroll specimen into view on mobile
+      if (window.innerWidth < 1100) {
+        document.getElementById('specimen').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // decision-helper jump links
+  document.querySelectorAll('[data-jump]').forEach(el => {
+    el.addEventListener('click', () => {
+      renderSpecimen(el.dataset.jump);
+      document.getElementById('specimen').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // initial render
+  renderSpecimen('react');
+</script>
+
+</body>
+</html>
+
